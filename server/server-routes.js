@@ -5,86 +5,55 @@ const axios = require("axios");
 const DiscordUser = require("../database/schemas/DiscordUser");
 const LocalUser = require("../database/schemas/LocalUser");
 const util = require('minecraft-server-util');
+const accountTypeModule = require("../utils/Accounts/accountType") 
+const accountReqsModule = require("../utils/Accounts/accountsReqs") 
+const serverHelpers = require("../utils/Servers/serverHelpers")
 const { getSoftware } = require("../utils/helpers");
 
 const origin = "https://panel.nethernet.org";
 
 const jspteroClient = new node.Client(origin, process.env.api_key); // for Client API
-const naClient = new Nodeactyl.NodeactylClient(origin, process.env.api_key);
-const jspteroApp = new node.Application(origin, process.env.app_api_key);
 
 const router = express.Router();
 
 router.get("/:id", async (req, res) => {
-  let user;
-  if (!req.session.passport) {
+  let user = await accountTypeModule.getAccountUser(req) // Get the mongodb user off a persons req object
+  
+  // Check if user exists
+  if (!accountTypeModule.hasPassport(req)) {
     return res.redirect("/");
   }
-  if (!req.session.passport.user) {
-    return res.redirect("/");
+
+  // Failsafe in case the previous if doesnt work for some reason
+  if (user == null) {
+    return res.redirect("/")
   }
-  if (req.session.passport.user.type == "discord") {
-    user = await DiscordUser.findById(req.session.passport.user.id);
-    if (!user) {
-      return res.redirect("/");
-    }
-    if (!user.mcServers[0][req.params.id]) {
-      return res.redirect("/");
-    }
-  } else if (req.session.passport.user.type == "local") {
-    user = await LocalUser.findById(req.session.passport.user.id);
-    if (!user) {
-      return res.redirect("/");
-    }
-    if (!user.mcServers[0][req.params.id]) {
-      return res.redirect("/");
-    }
+
+  // Check if user has access to the given server
+  if (!accountReqsModule.hasServer(user, req.params.id)) {
+    return res.redirect("/");
   }
 
   const serverId = req.params.id;
 
-  let status = "offline";
-  try {
-    status = await naClient.getServerStatus(serverId);
-  } catch (err) {
-    console.log(err);
+  // Get server's status
+  let status = await serverHelpers.getServerStatus(serverId)
+  
+  // Get server's internal ID
+  let internalid = await serverHelpers.getInternalID(serverId)
+
+  // Check if we could obtain the server's internal ID
+  if (internalid == null) {
+    // If not, redirect to homepage
+    return res.redirect("/")
+    // TODO: Add error toasts after redirect.
   }
-  let allocation = "example.nethernet.org:25565";
-  let internalid;
-  await jspteroClient
-    .getServerInfo(serverId)
-    .then((data) => {
-      internalid = data.internal_id;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  let serverInf;
-  await jspteroApp
-    .getServerInfo(internalid)
-    .then((data) => {
-      serverInf = data;
-      allocation = data.allocation;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  let final;
-  let serverIP;
-  let serverPort;
-  let onlinePlayers;
-  await jspteroApp
-    .getAllAllocations(2)
-    .then((data) => {
-      final = `${data[allocation - 1].attributes.ip}:${
-        data[allocation - 1].attributes.port
-      }`;
-      serverIP = data[allocation - 1].attributes.ip;
-      serverPort = data[allocation - 1].attributes.port;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+
+  let serverInf = await serverHelpers.getServerInfo(internalid)
+  let final = await serverHelpers.getServerIP(internalid)
+  // let onlinePlayers;
+
+  // Get the server's files
   let files;
   try {
     files = await jspteroClient.getAllFiles(serverId);
@@ -93,23 +62,14 @@ router.get("/:id", async (req, res) => {
     return res.redirect("/");
   }
 
-  let software;
+  // get the server egg (the software of the server, EG: Paper, Forge, etc.)
   let eggNum = serverInf.egg;
+  const software = getSoftware(eggNum);
 
-  console.log(eggNum);
+  // get MC version of server
+  let version = await serverHelpers.getServerMCVersion(serverInf)
 
-  software = getSoftware(eggNum);
-  let version;
-
-  if (serverInf.container.environment.MINECRAFT_VERSION == null) {
-    version = serverInf.container.environment.MC_VERSION;
-  } else {
-    version = serverInf.container.environment.MINECRAFT_VERSION;
-  }
-  // const version = serverInf.container.environment.MINECRAFT_VERSION;
-  // const version = "a version";
-
-  console.log(serverInf.container.environment.MINECRAFT_VERSION);
+  // Format the size of files coming in. This function is passed to the frontend (the webpage)
   function formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -118,50 +78,29 @@ router.get("/:id", async (req, res) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-  await util.status(serverIP, serverPort).then((response) => {
-    onlinePlayers = response.players.online;
-  }).catch((err) => {
-    console.log(err);
+  
+  // await util.status(serverIP, serverPort).then((response) => {
+  //   onlinePlayers = response.players.online;
+  // }).catch((err) => {
+  //   console.log(err);
+  // });
+  // console.log("Online Players: " + onlinePlayers);
+  
+  // Get the user's info and avatar to pass to the frontend
+  const {userInfo, avatarLink} = await accountTypeModule.getAccountInfo(req, user)
+
+  res.render("server", {
+    status: status,
+    ip: final,
+    serverfiles: files,
+    formatBytes: formatBytes,
+    sentId: serverId,
+    user: userInfo,
+    avatar: avatarLink,
+    server: serverInf,
+    software: software,
+    version: version,
   });
-  console.log("Online Players: " + onlinePlayers);
-  if (req.session.passport.user.type == "discord") {
-    // console.log(`Found user: ${discordUser}`);
-    const userInfo = await axios.get("https://discord.com/api/v10/users/@me", {
-      headers: {
-        Authorization: `Bearer ${user.accessToken}`,
-      },
-    });
-    console.log(userInfo.data);
-    // let userName = userInfo.data.username;
-    let avatarLink = `https://cdn.discordapp.com/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
-    res.render("server", {
-      status: status,
-      ip: final,
-      serverfiles: files,
-      formatBytes: formatBytes,
-      sentId: serverId,
-      user: userInfo.data,
-      avatar: avatarLink,
-      server: serverInf,
-      software: software,
-      version: version,
-    });
-  } else if (req.session.passport.user.type == "local") {
-    avatarLink = "/assets/images/plainavatar.png";
-    // console.log(serverInf);
-    res.render("server", {
-      status: status,
-      ip: final,
-      serverfiles: files,
-      formatBytes: formatBytes,
-      sentId: serverId,
-      user: user,
-      avatar: avatarLink,
-      server: serverInf,
-      software: software,
-      version: version,
-    });
-  }
 });
 
 module.exports = router;

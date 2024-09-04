@@ -1,19 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const Nodeactyl = require("nodeactyl");
-const { pterosocket } = require("pterosocket");
 const node = require("jspteroapi");
 const passport = require("passport");
-const mongoStore = require("connect-mongo");
 const cloudflare = require("cloudflare");
 const {
   hashPassword,
-  comparePassword,
   createServer,
 } = require("../utils/helpers");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-// const detector = require("temp-mail-detector");
 const DiscordUser = require("../database/schemas/DiscordUser");
 const LocalUser = require("../database/schemas/LocalUser");
 
@@ -37,10 +33,6 @@ const origin = "https://panel.nethernet.org";
 
 const jspteroClient = new node.Client(origin, process.env.api_key); // for Client API
 const naClient = new Nodeactyl.NodeactylClient(origin, process.env.api_key);
-const naApp = new Nodeactyl.NodeactylApplication(
-  origin,
-  process.env.app_api_key
-);
 const jspteroApp = new node.Application(origin, process.env.app_api_key);
 
 const cf = new cloudflare({
