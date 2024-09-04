@@ -1,0 +1,513 @@
+.credits {
+  color: #00ff00;
+}
+
+.profile {
+  margin-left: auto;
+}
+
+.logout {
+  color: #ff0000;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.sidebar {
+  background-color: #1a1a1a;
+  padding: 20px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+  border-radius: 10px;
+}
+
+.sidebar-item {
+  margin: 10px 0;
+  cursor: pointer;
+  width: 100%; /* Make sidebar items fill the entire width */
+  padding: 10px; /* Adjust padding for better spacing */
+  box-sizing: border-box; /* Include padding in the width calculation */
+  color: white;
+}
+
+.view {
+  display: none; /* Hide all views by default */
+}
+
+.view#server {
+  display: block; /* Show the server view by default */
+}
+
+.main-content {
+  flex: 3;
+  padding: 20px;
+}
+
+.server-status {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.server-status.offline {
+  border: 2px solid #303054;
+}
+
+.server-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.server-name {
+  font-size: 1.5em;
+}
+
+.connect-btn {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.server-state {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: red;
+  text-align: center;
+  border-radius: 5px;
+}
+
+#terminal {
+  width: 80%;
+  height: 70vh;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  padding: 10px;
+  overflow-y: auto;
+  font-family: monospace;
+}
+#input {
+  width: 80%;
+  padding: 10px;
+  font-family: monospace;
+  border: 1px solid #333;
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.server-state.offline {
+  background-color: #303054;
+}
+
+.server-state.online {
+  background-color: #50508b;
+}
+
+.start-btn {
+  background-color: #303054;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.del-btn {
+  /* display: block; */
+  background-color: #dc3545;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+  transition: transform 0.3s ease;
+}
+
+.stop-btn {
+  background-color: #303054;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button#lolz:disabled {
+  opacity: 0.5; /* Adjust the value as needed */
+  cursor: not-allowed;
+}
+
+.server-info {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.info-label {
+  font-weight: bold;
+}
+
+.info-value {
+  margin-right: 20px;
+}
+
+.copy-btn,
+.change-btn {
+  background-color: #303054;
+  color: #ffffff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+}
+
+.start-btn,
+.connect-btn,
+.copy-btn,
+.change-btn,
+.stop-btn {
+  background-color: #303054;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.start-btn:hover,
+.connect-btn:hover,
+.copy-btn:hover,
+.change-btn:hover,
+.stop-btn:hover,
+.del-btn:hover {
+  transform: scale(1.05);
+}
+
+.start-btn:focus,
+.connect-btn:focus,
+.copy-btn:focus,
+.change-btn:focus,
+.stop-btn:focus,
+.del-btn:focus {
+  outline: none;
+}
+
+/* View button styling */
+.view-btn {
+  background-color: #007bff;
+  color: #ffffff;
+  /* padding: 10px 20px; */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin-right: 1%;
+}
+
+.view-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Delete button styling */
+.delete-btn {
+  background-color: #dc3545; /* Red color */
+  color: #ffffff;
+  /* padding: 10px 20px; */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* File manager styling */
+/* .file-manager {
+    margin-top: 20px;
+}
+
+.directory {
+    margin-bottom: 20px;
+}
+
+.directory-header {
+    display: flex;
+    align-items: center;
+    background-color: #303054;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.directory-name {
+    flex-grow: 1;
+    color: #fff;
+}
+
+.directory-header i {
+    transition: transform 0.3s ease;
+}
+
+.directory-header i.rotated {
+    transform: rotate(180deg);
+}
+
+.directory-content {
+    display: none;
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.file {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-info {
+    flex-grow: 1;
+}
+
+.file-name {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.file-size {
+    color: #888;
+} */
+
+header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+header nav a {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #455a64;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+header nav a:hover {
+  background-color: #546e7a;
+}
+
+.directory {
+  background-color: #37474f;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #455a64;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.item:hover {
+  background-color: #546e7a;
+}
+
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  background-color: #455a64;
+  border-radius: 5px;
+  display: inline-block;
+  position: relative;
+  margin-right: 10px; /* Updated */
+}
+
+.checkbox-container input[type="checkbox"]:checked ~ .checkmark {
+  background-color: #29b6f6;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-container input[type="checkbox"]:checked ~ .checkmark:after {
+  display: block;
+}
+
+.item i,
+.item .name,
+.item .date {
+  cursor: pointer;
+}
+
+.item i {
+  margin-right: 10px;
+}
+
+.item .name {
+  flex: 1;
+}
+
+.item .date {
+  color: #b0bec5;
+}
+
+.size {
+  margin-right: 10px;
+}
+
+.loading {
+  display: none;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#up {
+  cursor: pointer;
+}
+
+/* Text Editor Styles */
+.editor-container {
+  background: #161b22; /* Container background color */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.monaco-editor {
+  text-align: left !important;
+}
+.editor-container:hover {
+  transform: translateY(-5px);
+}
+
+.editor-container h2 {
+  color: #c9d1d9; /* Heading color */
+  font-weight: 700;
+}
+
+#editor {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #30363d; /* Border color */
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+  background: #0d1117; /* Editor background color */
+  color: #c9d1d9; /* Editor text color */
+}
+
+.editor-container .button-container {
+  margin-top: 20px;
+}
+
+button.editor-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #238636; /* Button background color */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+button.editor-btn:hover {
+  background: #2ea043; /* Button hover color */
+  transform: translateY(-2px);
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+div#currentdir {
+  margin-right: auto;
+  padding: 10px 20px;
+  background-color: #455a64;
+  color: #fff;
+  border-radius: 5px;
+}
+
+#playerCount {
+  color: #00ff00;
+  /* make it bold */
+  font-weight: bold;
+}

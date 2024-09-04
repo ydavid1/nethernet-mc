@@ -1,0 +1,341 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "whitelist.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 2,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "version_history.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 52,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "usercache.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 107,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:41:38+00:00",
+        "modified_at": "2024-05-30T20:41:38+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "spigot.yml",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 4849,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain; charset=utf-8",
+        "created_at": "2024-05-30T20:36:42+00:00",
+        "modified_at": "2024-05-30T20:36:42+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "server.properties",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 1378,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain; charset=utf-8",
+        "created_at": "2024-05-30T20:36:08+00:00",
+        "modified_at": "2024-05-30T20:36:08+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "server.jar",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 45795736,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/jar",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:04+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "permissions.yml",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 0,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain",
+        "created_at": "2024-05-30T20:36:20+00:00",
+        "modified_at": "2024-05-30T20:36:20+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "ops.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 136,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:43:16+00:00",
+        "modified_at": "2024-05-30T20:43:16+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "help.yml",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 0,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain",
+        "created_at": "2024-05-30T20:36:15+00:00",
+        "modified_at": "2024-05-30T20:36:15+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "eula.txt",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 9,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain; charset=utf-8",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:39+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "commands.yml",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 104,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain; charset=utf-8",
+        "created_at": "2024-05-30T20:36:17+00:00",
+        "modified_at": "2024-05-30T20:36:17+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "bukkit.yml",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 697,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "text/plain; charset=utf-8",
+        "created_at": "2024-05-30T20:36:17+00:00",
+        "modified_at": "2024-05-30T20:36:17+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "banned-players.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 2,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "banned-ips.json",
+        "mode": "-rw-r--r--",
+        "mode_bits": "644",
+        "size": 2,
+        "is_file": true,
+        "is_symlink": false,
+        "mimetype": "application/json",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": ".cache",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:16+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "cache",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:07+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "config",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "libraries",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:10+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "logs",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:35:55+00:00",
+        "modified_at": "2024-05-30T20:35:55+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "plugins",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:36:19+00:00",
+        "modified_at": "2024-05-30T20:36:19+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "versions",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:35:51+00:00",
+        "modified_at": "2024-05-30T20:35:11+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "world",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:57:09+00:00",
+        "modified_at": "2024-05-30T20:57:09+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "world_nether",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:57:09+00:00",
+        "modified_at": "2024-05-30T20:57:09+00:00"
+      }
+    },
+    {
+      "object": "file_object",
+      "attributes": {
+        "name": "world_the_end",
+        "mode": "drwxr-xr-x",
+        "mode_bits": "755",
+        "size": 4096,
+        "is_file": false,
+        "is_symlink": false,
+        "mimetype": "inode/directory",
+        "created_at": "2024-05-30T20:57:09+00:00",
+        "modified_at": "2024-05-30T20:57:09+00:00"
+      }
+    }
+  ]
+}

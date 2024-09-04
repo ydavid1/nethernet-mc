@@ -1,0 +1,128 @@
+html(lang='en')
+  head
+    include includes/head
+    link(rel='stylesheet', type='text/css', href='assets/css/panel.css')
+  body
+    include includes/body
+    .container
+      .chart-container
+        .chart
+          h3 New servers
+          canvas#newServersChart
+        .chart
+          h3 Combined Users
+          canvas#newUsersChart
+      .server-container
+        h3 My servers
+        #serverList.server-list
+          //- .server
+          //-   .server-name fdsfdsf
+          //-   .server-info 78.74.74.79:25565
+          //- .server
+          //-   .server-name Server2
+          //-   .server-info 192.168.1.1:25565
+          //- .server
+          //-   .server-name LoadingServer
+          //-   .server-info
+          //-     .spinner-container
+          //-       .spinner
+          //-       .spinner-tooltip Creating
+          each info, id in servers
+            .server(id=id)
+              .server-name= info.domainName
+              .server-info
+                - if (settingups.includes(id))
+                    .spinner-container
+                      .spinner
+                      .spinner-tooltip Creating
+                - else
+                  | #{info.domainName}.nethernet.org
+          // Add more servers here
+        //- .toggle
+        //-   label(for='toggleServers') Showing your servers
+        //-   input#toggleServers(type='checkbox')
+        button.create-server-btn Create Server
+      .stats-container
+        h3 Statistic
+        .stat
+          .stat-value #{Object.keys(servers).length}
+          .stat-label All servers
+        .stat
+          .stat-value 2
+          .stat-label Combined Users
+    // Create Server Modal
+    .modal#serverModal
+      .modal-content
+        span.close &times;
+        h2 Create a server
+        .server-selection
+          label(for='javaEdition')
+            input#javaEdition(type='radio', name='edition', value='java' checked)
+            | Java Edition
+          label(for='bedrockEdition')
+            input#bedrockEdition(type='radio', name='edition', value='bedrock')
+            | Bedrock Edition (Win10/MCPE)
+        input(type="text", placeholder="example.nethernet.org")
+        input(type="text", placeholder="Welcome to the server of example!")
+        // Dropdown for Server Versions
+        // Dropdown for Server Software
+        label(for='serverSoftware') Choose Server Software:
+        select#serverSoftware(name='serverSoftware')
+          option(value=1) Sponge
+          option(value=2) Vanilla
+          option(value=3) Forge
+          option(value=4) Paper
+          option(value=5) Fabric
+          // Add more software options as needed
+        label(for='serverVersion') Choose Server Version:
+        select#serverVersion(name='serverVersion')
+          option(value='1.17') 1.17
+          option(value='1.16') 1.16
+          option(value='1.15') 1.15
+            // Add more versions as needed
+        button.create-btn Create
+    script(src='https://cdn.jsdelivr.net/npm/chart.js')
+    script.
+      const ctxNewServers = document.getElementById('newServersChart').getContext('2d');
+      const newServersChart = new Chart(ctxNewServers, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'New Servers',
+            data: [0.5, 1.5, 0.75, 1.25, 0.5, 1.0],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      const ctxNewUsers = document.getElementById('newUsersChart').getContext('2d');
+      const newUsersChart = new Chart(ctxNewUsers, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Combined Users',
+            data: [0.7, 1.0, 1.2, 0.9, 1.1, 0.8],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    script(src='/assets/js/panel.js')

@@ -1,0 +1,114 @@
+// Jquery v3.6.1
+script(src='assets/js/jquery.min.js')
+// Bootstrap v5.2.1
+script(src='assets/js/popper.min.js')
+| &#x9;
+script(src='assets/js/bootstrap.min.js')
+// OWL Slider v2.3.4
+script(src='assets/js/owl.carousel.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js')
+// Navbar
+// Navigation
+nav#navbar_top.navbar.navbar-dark.navbar-expand-lg.fixed-top
+    .container-fluid.container-custom
+        a.navbar-brand(href='/')
+            img.img-fluid(src='assets/images/logo2.png', alt='NetherNet Logo')
+            | &#x9;&#x9;&#x9;Nether
+            span Net
+        | &#x9;    
+        button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#dinoNavbar', aria-controls='dinoNavbar', aria-expanded='false', aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+        | &#x9;&#x9;
+        #dinoNavbar.collapse.navbar-collapse
+            ul.navbar-nav.ms-auto.mb-2.mb-lg-0
+                li.nav-item
+                    a.nav-link(href='/') Home
+                | &#x9;&#x9;        
+                li.nav-item
+                    a.nav-link(href='minecraft.html') Minecraft Hosting
+                | &#x9;&#x9;        
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+                        | Game Hosting
+                    | &#x9;&#x9;          &#x9;
+                    ul.dropdown-menu.dropdown-large.dropdown-menu-end
+                        .row.g-3
+                            .col-6
+                                ul.list-unstyled
+                                    li
+                                        a.dropdown-item(href='ark.html')
+                                            img(src='assets/images/game_icons/game-ark.png', alt='ARK Icon')
+                                            |  ARK
+                                    | &#x9;&#x9;&#x9;&#x9;&#x9;            &#x9;
+                                    li
+                                        a.dropdown-item(href='csgo.html')
+                                            img(src='assets/images/game_icons/game-csgo.png', alt='CS:GO Icon')
+                                            |  CS:GO
+                            | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                            .col-6
+                                ul.list-unstyled
+                                    li
+                                        a.dropdown-item(href='fivem.html')
+                                            img(src='assets/images/game_icons/game-fivem.png', alt='FiveM Icon')
+                                            |  FiveM
+                                    | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                                    li
+                                        a.dropdown-item(href='rust.html')
+                                            img(src='assets/images/game_icons/game-rust.png', alt='RUST Icon')
+                                            |  RUST
+                    | &#x9;&#x9;        
+                    li.nav-item.dropdown
+                        a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+                            | Other Hosting
+                        | &#x9;&#x9;          &#x9;
+                        ul.dropdown-menu.dropdown-menu-end
+                            li
+                                a.dropdown-item(href='vps-hosting.html') VPS Hosting
+                            | &#x9;&#x9;            &#x9;
+                            li
+                                a.dropdown-item(href='discord-hosting.html') Discord Hosting
+                    | &#x9;&#x9;        
+                    li.nav-item.dropdown
+                        a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+                            | Important
+                        | &#x9;&#x9;          &#x9;
+                        ul.dropdown-menu.dropdown-menu-end
+                            li
+                                a.dropdown-item(href='partners.html') Partners
+                            | &#x9;&#x9;            &#x9;
+                            li
+                                a.dropdown-item(href='#') Contact
+                            | &#x9;&#x9;            &#x9;
+                            li
+                                a.dropdown-item(href='terms-of-service.html') Terms of Service
+                            | &#x9;&#x9;            &#x9;
+                            li
+                                a.dropdown-item(href='privacy-policy.html') Privacy Policy
+                    | &#x9;&#x9;        
+                    li.nav-item
+                        .dropdown.text-center
+                            a#panel.btn.dropdown-toggle(data-bs-toggle='dropdown', aria-expanded='false')
+                                | Client Area
+                            | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                            ul.dropdown-menu.dropdown-menu-end.dropdown-menu-panel(aria-labelledby='panel')
+                                a.dropdown-item(href='#')
+                                    | Client Area 
+                                    span.d-block Billing &amp; Support
+                                | &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;
+                                a.dropdown-item(href='#')
+                                    | Game Panel 
+                                    span.d-block Game Management
+                    if user
+                        li.nav-item.dropdown
+                            a#navbarDarkDropdownMenuLink.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+                                img#avatarImage(src=avatar, alt=user.username, width='32', height='32', class='d-inline-block allign-top')
+                                span.ps-2 #{user.username}
+                            ul.dropdown-menu.dropdown-menu-dark(aria-labelledby='navbarDarkDropdownMenuLink')
+                                li
+                                    a.dropdown-item(href='/panel') Panel
+                                li
+                                    a.dropdown-item(href='/api/logout') Logout
+                    else
+                        li.nav-item
+                            a.nav-link(href='/login') Login
+                            | &#x9;&#x9;

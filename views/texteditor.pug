@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title Modern Text Editor
+    link(rel="stylesheet", href="assets/css/editor.css")
+  body
+    .container-tb
+      h1 Modern Text Editor
+      textarea#editor
+      .button-container
+        button#save-button Save to File
+    script. 
+        document.getElementById('save-button').addEventListener('click', function() {
+            const text = document.getElementById('editor').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'editor-content.txt';
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+

@@ -1,0 +1,13 @@
+div#loadingScreen
+    img#loadingLogo(src="/images/logo.png", alt="Loading...")
+    
+script.
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+        var loadingScreen = document.getElementById('loadingScreen');
+        loadingScreen.style.opacity = '0';
+        loadingScreen.addEventListener('transitionend', function() {
+            loadingScreen.style.display = 'none';
+        });
+        }, 2000);
+    });

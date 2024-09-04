@@ -1,0 +1,282 @@
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: relative;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip Styles */
+.spinner-container {
+  position: relative;
+  display: inline-block; /* To position the tooltip correctly */
+}
+
+.spinner-container .spinner-tooltip {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 12px;
+}
+
+.spinner-container:hover .spinner-tooltip {
+  visibility: visible;
+}
+
+.profile {
+  margin-left: auto;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.chart-container {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.chart {
+  flex: 1;
+  margin: 10px;
+  background-color: #1a1a3d;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 300px;
+}
+
+.server-container,
+.stats-container {
+  flex: 1;
+  margin: 10px;
+  background-color: #1a1a3d;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 300px;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.server {
+  background-color: #303054;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.server:hover {
+  background-color: #454575;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle label {
+  margin-right: 10px;
+}
+
+.create-server-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.create-server-btn:hover {
+  background-color: #45a049;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  background-color: #303054;
+  padding: 10px;
+  border-radius: 50%;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+
+.stat-label {
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .chart-container,
+  .server-container,
+  .stats-container {
+    flex: 100%;
+    margin: 10px 0;
+  }
+
+  .navbar-item {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .profile {
+    margin-left: 0;
+  }
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #2f2f2f;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 10px;
+}
+
+.close {
+  color: #bbb;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.server-selection {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.server-selection label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.server-selection input[type="radio"] {
+  margin-right: 10px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #1f1f1f;
+  color: #fff;
+}
+
+.create-btn {
+  padding: 10px 20px;
+  background-color: #00b894;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.create-btn:hover {
+  background-color: #019474;
+}
+
+/* Chart Styles */
+.chart-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart {
+  width: 48%;
+}
+
+h3 {
+  color: #fff;
+}
+
+/* Custom dropdown arrow */
+select {
+  appearance: none;
+  padding-right: 20px; /* Space for custom arrow */
+  background: url("path-to-your-arrow-image") no-repeat right center; /* Custom arrow image */
+}
+
+/* Dropdown container */
+select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: white;
+}
+
+/* Dropdown options */
+option {
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 5px 10px;
+}
+
+/* Hover effect on options */
+option:hover {
+  background-color: #e9e9e9;
+}

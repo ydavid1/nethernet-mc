@@ -1,0 +1,10 @@
+html(lang='en')
+  head
+    include includes/head
+    link(rel='stylesheet', type='text/css', href='assets/css/404.css')
+  body
+    include includes/body
+    .container.center.text-center
+        h1 Uhh... 404?
+        p #{url} does not exist.
+        a(href='/') Go back to the homepage

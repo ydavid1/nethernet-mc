@@ -1,0 +1,175 @@
+#terminal
+input#input(type='text', placeholder='Enter command', autofocus='')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js')
+script.
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+    function sanitizeLog(logText) {
+        // Escape special HTML characters
+        const escapeHtml = (text) => text.replace(/[&<>"']/g, (char) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+
+        // Remove ANSI escape codes
+        const removeAnsiCodes = (text) => text.replace(/\x1B\[\d+m/g, '');
+
+        // Sanitize the log text
+        const sanitizedText = escapeHtml(removeAnsiCodes(logText));
+        return sanitizedText;
+    }
+    const socket = io();
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('input');
+    socket.on('connect', function() {
+        console.log("Connected to IO instance")
+        //- terminal.innerHTML += '<div>Connected to server</div>';
+        //- terminal.scrollTop = terminal.scrollHeight;
+    });
+    socket.on('changingserverstate', function(data) {
+        if (!document.querySelector('.start-btn')) {
+            document.querySelector('.stop-btn').disabled = true;
+            document.querySelector('.stop-btn').textContent = ' Start';
+            document.querySelector('.stop-btn').classList.add('start-btn');
+            document.querySelector('.stop-btn ').classList.remove('stop-btn');
+            // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+            document.querySelector('.start-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-play"></i>');
+            document.querySelector('.start-btn i').classList.remove('fa-stop');
+            document.querySelector('.start-btn i').classList.add('fa-play');
+        } else {
+            document.querySelector('.start-btn').disabled = true;
+            document.querySelector('#terminal').innerHTML = '';
+            document.querySelector('.start-btn').textContent = ' Stop';
+            document.querySelector('.start-btn').classList.add('stop-btn');
+            document.querySelector('.start-btn ').classList.remove('start-btn');
+            // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+            document.querySelector('.stop-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-stop"></i>');
+            document.querySelector('.stop-btn i').classList.remove('fa-play');
+            document.querySelector('.stop-btn i').classList.add('fa-stop');
+        }
+        document.querySelector('.server-state').textContent = data;
+    });
+    $('#lolz').click(function() {
+        if (!document.querySelector('.start-btn')) {
+            console.log('Stopping server')
+            socket.emit('stop')
+            document.querySelector('.stop-btn').disabled = true;
+            document.querySelector('.stop-btn').textContent = ' Start';
+            document.querySelector('.stop-btn').classList.add('start-btn');
+            document.querySelector('.stop-btn ').classList.remove('stop-btn');
+            // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+            document.querySelector('.start-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-play"></i>');
+            document.querySelector('.start-btn i').classList.remove('fa-stop');
+            document.querySelector('.start-btn i').classList.add('fa-play');
+            document.querySelector('.server-state').textContent = 'Stopping...';
+            return
+        }
+        console.log('Starting server')
+        document.querySelector('.start-btn').disabled = true;
+        socket.emit('start')
+        document.querySelector('#terminal').innerHTML = '';
+        document.querySelector('.start-btn').textContent = ' Stop';
+        document.querySelector('.start-btn').classList.add('stop-btn');
+        document.querySelector('.start-btn ').classList.remove('start-btn');
+        // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+        document.querySelector('.stop-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-stop"></i>');
+        document.querySelector('.stop-btn i').classList.remove('fa-play');
+        document.querySelector('.stop-btn i').classList.add('fa-stop');
+        document.querySelector('.server-state').textContent = 'Starting...';
+    });
+    socket.on('fullconnected', function() {
+        if (!document.querySelector('.start-btn')) {
+            document.querySelector('.stop-btn').disabled = false;
+        } else {
+            document.querySelector('.start-btn').disabled = false;
+        }
+    });
+    socket.on('stopped', function() {
+        document.querySelector('.server-state').textContent = 'Offline';
+        document.querySelector('.server-state').classList.remove('online');
+        document.querySelector('.server-state').classList.add('offline');
+        if (!document.querySelector('.start-btn')) {
+            document.querySelector('.stop-btn').disabled = false;
+            document.querySelector('.stop-btn').textContent = ' Start';
+            document.querySelector('.stop-btn').classList.add('start-btn');
+            document.querySelector('.stop-btn ').classList.remove('stop-btn');
+            // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+            document.querySelector('.start-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-play"></i>');
+            document.querySelector('.start-btn i').classList.remove('fa-stop');
+            document.querySelector('.start-btn i').classList.add('fa-play');
+            return
+        }
+        document.querySelector('.start-btn').disabled = false;
+    });
+    socket.on('started', function() {
+        document.querySelector('.server-state').textContent = 'Online';
+        document.querySelector('.server-state').classList.remove('offline');
+        document.querySelector('.server-state').classList.add('online');
+        if (!document.querySelector('.stop-btn')) {
+            document.querySelector('.start-btn').disabled = false;
+            document.querySelector('.start-btn').textContent = ' Stop';
+            document.querySelector('.start-btn').classList.add('stop-btn');
+            document.querySelector('.start-btn ').classList.remove('start-btn');
+            // change the icon by adding the i tag to the start button. all tags have been previously removed. make sure the icon is on the left of the text
+            document.querySelector('.stop-btn').insertAdjacentHTML('afterbegin', '<i class="fas fa-stop"></i>');
+            document.querySelector('.stop-btn i').classList.remove('fa-play');
+            document.querySelector('.stop-btn i').classList.add('fa-stop');
+            return
+        }
+        document.querySelector('.stop-btn').disabled = false;
+    });
+    socket.on('disconnect', function() {
+        //- terminal.innerHTML += '<div>Disconnected from server</div>';
+        //- terminal.scrollTop = terminal.scrollHeight;
+        console.log("Disconnected from IO instance")
+    });
+    socket.on('output', function(output) {
+        terminal.innerHTML += `<div>${sanitizeLog(output)}</div>`;
+        terminal.scrollTop = terminal.scrollHeight;
+        if (output == "Server is not running") {
+            input.disabled = true;
+        } else {
+            input.disabled = false;
+        }
+    });
+    // Handle cached logs
+    socket.on('cachedLogs', function(logs) {
+        if (logs) {
+            //- console.log(logs.split('\n').map(log => `<div>${log}</div>`).join(''))
+            terminal.innerHTML += logs.split('\n').map(log => `<div>${log}</div>`).join('');
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    });
+    socket.on('toast', function(message) {
+        console.log('Toast:', message);
+        Toastify({
+            text: message,
+            duration: 5000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            //- backgroundColor: "#34bf36",
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+        }).showToast();
+    });
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const command = input.value;
+        if (command.trim() !== '') {
+            console.log('Sending command:', command);
+            socket.emit('command', command);
+            input.value = '';
+            terminal.innerHTML += `<div>> ${escapeHtml(command)}</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+    }
+    });

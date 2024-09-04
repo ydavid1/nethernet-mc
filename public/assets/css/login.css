@@ -1,0 +1,70 @@
+
+  .login-card {
+    background-color: #171638;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .discordimg {
+    width: 50px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .login-options {
+    margin-bottom: 20px;
+  }
+  
+  .discord-login {
+    background-color: #7275da;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .discord-login:hover {
+    background-color: #5b6eae;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    background-color: #0e0d29;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #fff;
+  }
+  
+  button[type="submit"] {
+    background-color: #00d25b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #00b94f;
+  }
+  
+  p {
+    margin: 10px 0;
+    color: #ccc;
+  }
+  

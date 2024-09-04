@@ -1,0 +1,541 @@
+html(lang="en")
+  head
+    include includes/head
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
+    link(rel='stylesheet', type='text/css', href='/assets/css/dash.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js')
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js")
+    //- script.
+    //-   require.config({
+    //-     paths: {
+    //-       'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs'
+    //-     }
+    //-   });
+    link(rel='stylesheet', data-name='vs/editor/editor.main', href='/assets/monaco-editor/min/vs/editor/editor.main.css')
+  body
+    include includes/body
+<!-- ... -->
+    <script src="https://cdn.jsdelivr.net/gh/leonardosnt/mc-player-counter/dist/mc-player-counter.min.js"></script>
+    script.
+      var require = { paths: { 'vs': '/assets/monaco-editor/min/vs' } };
+
+    script(src='/assets/monaco-editor/min/vs/loader.js')
+    script(src='/assets/monaco-editor/min/vs/editor/editor.main.nls.js')
+    script(src='/assets/monaco-editor/min/vs/editor/editor.main.js')
+    .container
+      .sidebar
+        .sidebar-item(data-view="server") Server
+        //- .sidebar-item(data-view="editor") Editor
+        .sidebar-item(data-view="options") Options
+        .sidebar-item(data-view="console") Console
+        .sidebar-item(data-view="log") Log
+        .sidebar-item(data-view="players") Players
+        .sidebar-item(data-view="software") Software
+        .sidebar-item(data-view="files") Files
+        .sidebar-item(data-view="worlds") Worlds
+        .sidebar-item(data-view="backups") Backups
+        .sidebar-item(data-view="access") Access
+        .sidebar-item(data-view="transactions") Transactions
+      .main-content
+        .view#server
+          h1 Server
+          .server-status.offline
+            .server-details
+              .server-name #{server.name}.nethernet.org
+            //-   button.connect-btn Connect
+            - if (status === 'offline')
+              .server-state.offline Offline
+              button#lolz.start-btn(disabled)
+                i.fas.fa-play
+                |  Start
+            - else if (status === 'starting')
+              .server-state.online Starting...
+              button#lolz.stop-btn(disabled)
+                i.fas.fa-stop
+                |  Stop
+            - else if (status === 'running')
+              .server-state.online Online
+              button#lolz.stop-btn(disabled)
+                i.fas.fa-stop
+                |  Stop
+            - else if (status === 'stopping')
+              .server-state.offline Stopping...
+              button#lolz.start-btn(disabled)
+                i.fas.fa-play
+                |  Start
+            button#delete.del-btn
+                i.fas.fa-trash
+                |  Delete
+          .server-info
+            .info-item
+              span.info-label Players
+              span(data-playercounter-ip=`${server.name}.nethernet.org`, data-playercounter-format="{online}/{max}", data-playercounter-refreshRate="60").info-value#playerCount 0
+              button.change-btn#managePlayers Manage
+            .info-item
+              span.info-label Address
+              span.info-value#serverName2 #{server.name}.nethernet.org
+              button.copy-btn#serverCopy Copy
+              //- make the button copy the server address to the clipboard
+              script.
+                document.querySelector('#serverCopy').addEventListener('click', () => {
+                    const address = document.querySelector('#serverName2').textContent;
+                    navigator.clipboard.writeText(address).then(() => {
+                        Toastify({
+                            text: "Server address copied to clipboard.",
+                            duration: 5000,
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "right", // `left`, `center` or `right`
+                            //- backgroundColor: "#34bf36",
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                        }).showToast();
+                    }).catch(() => {
+                        Toastify({
+                            text: "Failed to copy server address to clipboard.",
+                            duration: 5000,
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "right", // `left`, `center` or `right`
+                            backgroundColor: "#ff0000",
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                        }).showToast();
+                    });
+                });
+            .info-item
+              span.info-label Software
+              span.info-value #{software}
+              button.change-btn Change
+            .info-item
+              span.info-label Version
+              span.info-value #{version}
+              button.change-btn Change
+        //- .view#editor(style="display: none;")
+        //-   .editor-container
+        //-     h2 Editor
+        //-     textarea.editor#editor
+        //-     .button-container
+        //-       button.editor-btn#save-button Save to File
+        .view#options(style="display: none;")
+          h1 Options
+          p Options content goes here.
+        .view#console(style="display: none;")
+          h1 Console
+          //- p Console content goes here.
+          include includes/console
+        .view#log(style="display: none;")
+          h1 Log
+          p Log content goes here.
+        .view#players(style="display: none;")
+          h1 Players
+          p Players content goes here.
+        .view#software(style="display: none;")
+          h1 Software
+          p Software content goes here.
+        .view#files(style="display: none;")
+          header
+            nav
+              div#currentdir /
+              // make an up icon
+              a#up
+                i.fas.fa-arrow-up
+              a(href='#') Create Directory
+              //- a(href='#') Upload
+              a(href='#') New File
+          .directory
+            each file in serverfiles
+              .item(data-id=file.attributes.name, data-size=file.attributes.size, data-date=file.attributes.modified_at)
+                label.checkbox-container
+                  input(type="checkbox")
+                  span.checkmark
+                i.fas(class= file.attributes.is_file ? 'fa-file' : 'fa-folder')
+                span.name= file.attributes.name
+                span.size= formatBytes(file.attributes.size)
+                span.date= new Date(file.attributes.modified_at).toLocaleDateString()
+                .loading
+                  img(src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/fonts/fontawesome-webfont.woff")
+                // Add more items as needed
+        .view#worlds(style="display: none;")
+          h1 Worlds
+          p Worlds content goes here.
+        .view#backups(style="display: none;")
+          h1 Backups
+          p Backups content goes here.
+        .view#access(style="display: none;")
+          h1 Access
+          p Access content goes here.
+        .view#transactions(style="display: none;")
+          h1 Transactions
+          p Transactions content goes here.
+    script.
+      $(document).ready(function() {
+            $('.sidebar-item').click(function() {
+                var view = $(this).data('view');
+                $('.view').hide(); // Hide all views
+                $('#' + view).show(); // Show the selected view
+
+                //Detect if files view is selected
+                //- if (view === 'files') {
+                //-     projectFiles()
+                //- }
+            });
+            $('#managePlayers').click(function() {
+                // Show the players view
+                $('.view').hide(); // Hide all views
+                $('#players').show(); // Show the selected view
+            });
+        });
+    script(src='/assets/js/server.js')
+    script.
+      let up = '/'
+      function replaceSlashWithDot(inputString) {
+          return inputString.replace(/\//g, '.');
+      }
+      function formatBytes(bytes, decimals = 2) {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const dm = decimals < 0 ? 0 : decimals;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      }
+      // Function to fetch and display files for a given directory
+      async function fetchAndDisplayFiles(directoryName) {
+          let fileList = document.querySelector('.directory');
+          if (!fileList) {
+            // editor is open, so close it and open the files view
+            const fileManager = document.querySelector('#files');
+            fileManager.innerHTML = `
+              <header>
+                  <nav>
+                      <!-- make an up icon--><span id="currentdir">/${directoryName}</span><a id="up"><i class="fas fa-arrow-up"></i></a><a href="#">Create Directory</a><a href="#">New File</a></nav>
+              </header>
+              <div class="directory"></div>
+            `;
+            fileList = document.querySelector('.directory');
+            document.querySelector('#up').addEventListener('click', async () => {
+                // split the current directory by the slash
+                const split = up.split('/');
+                // remove the last element from the array
+                console.log(split)
+                split.pop();
+                // join the array back together with a slash
+                const newDir = split.join('/');
+                up = newDir;
+                // fetch and display the files for the new directory
+                await fetchAndDisplayFiles(newDir);
+            });
+          } else {
+            if (directoryName.startsWith('/')) {
+              document.getElementById('currentdir').textContent = `${directoryName}`
+            } else {
+              document.getElementById('currentdir').textContent = `/${directoryName}`
+            }
+          }
+          const loadingIcon = document.querySelector('.loading');
+
+          //- loadingIcon.style.display = 'inline-block';
+
+          try {
+              const response = await fetch(`/api/files/#{sentId}?dir=${directoryName}`);
+              const data = await response.json();
+
+              // Clear existing file list
+              fileList.innerHTML = '';
+
+              // Append new files to the list
+              data.forEach(file => {
+                  const newItem = document.createElement('div');
+                  newItem.classList.add('item');
+                  newItem.setAttribute('data-id', file.attributes.name);
+
+                  const checkboxContainer = document.createElement('label');
+                  checkboxContainer.classList.add('checkbox-container');
+                  const checkbox = document.createElement('input');
+                  checkbox.type = 'checkbox';
+                  const checkmark = document.createElement('span');
+                  checkmark.classList.add('checkmark');
+                  checkboxContainer.appendChild(checkbox);
+                  checkboxContainer.appendChild(checkmark);
+
+                  const icon = document.createElement('i');
+                  icon.classList.add('fas', file.attributes.is_file ? 'fa-file' : 'fa-folder');
+
+                  const name = document.createElement('span');
+                  name.classList.add('name');
+                  name.textContent = file.attributes.name;
+
+                  const size = document.createElement('span');
+                  size.classList.add('size');
+                  size.textContent = formatBytes(file.attributes.size);
+
+                  const date = document.createElement('span');
+                  date.classList.add('date');
+                  date.textContent = new Date(file.attributes.modified_at).toLocaleDateString();
+
+                  newItem.appendChild(checkboxContainer);
+                  newItem.appendChild(icon);
+                  newItem.appendChild(name);
+                  newItem.appendChild(date);
+                  newItem.appendChild(size);
+
+                  if (!file.attributes.is_file) {
+                      // If it's a directory, make it clickable to fetch its files
+                      newItem.addEventListener('click', () => {
+                        up = `${directoryName}/${file.attributes.name}`
+                        console.log(up)
+                        console.log(`Yeh its here. ${directoryName}/${file.attributes.name}`)
+                        fetchAndDisplayFiles(`${directoryName}/${file.attributes.name}`)
+                      });
+                      newItem.classList.add('directory'); // Add a class to style directories differently
+                  } else {
+                      // If it's a file, make it clickable to show its content
+                      // check if the file is not an exe or jar file
+                      if (file.attributes.name.endsWith('.exe') || file.attributes.name.endsWith('.jar') || file.attributes.size > 1000000) {
+                        newItem.classList.add('disabled');
+                      } else {
+                        newItem.addEventListener('click', async () => {
+                          // show file content
+                          console.log('show file content');
+                          
+                          // change view to editor
+                          const fileManager = document.querySelector('#files');
+                          fileManager.innerHTML = `
+                            <header>
+                                <nav>
+                                    <a id="up"><i class="fas fa-arrow-up"></i></a></nav>
+                            </header>
+                            <div class="editor-container">
+                              <h2>Editor</h2>
+                              <div id="editor"></div>
+                              <div class="button-container">
+                                <button class="editor-btn" id="save-button">Save to File</button>
+                              </div>
+                            </div>
+                          `;
+
+                          // Add event listener for the save button
+                          document.getElementById('save-button').addEventListener('click', async function() {
+                            // disable the save button
+                            document.getElementById('save-button').disabled = true;
+                            const text = await window.editor.getValue();
+                            console.log(text)
+                            await fetch(`/api/writefile/#{sentId}?file=${directoryName}/${file.attributes.name}`, {
+                                method: 'POST',
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"
+                                },
+                                body: await JSON.stringify({
+                                    content: text
+                                })
+                            }).then(response => response.json()) // Convert the response to JSON
+                            .then(data => {
+                                if (data.error) {
+                                  Toastify({
+                                      text: "Failed to save file, if this issue persists please contact support.",
+                                      duration: 5000,
+                                      close: true,
+                                      gravity: "top", // `top` or `bottom`
+                                      position: "right", // `left`, `center` or `right`
+                                      backgroundColor: "#ff0000",
+                                      stopOnFocus: true, // Prevents dismissing of toast on hover
+                                  }).showToast();
+                                } else {
+                                  Toastify({
+                                      text: "File saved successfully.",
+                                      duration: 5000,
+                                      close: true,
+                                      gravity: "top", // `top` or `bottom`
+                                      position: "right", // `left`, `center` or `right`
+                                      backgroundColor: "#00ff00",
+                                      stopOnFocus: true, // Prevents dismissing of toast on hover
+                                  }).showToast();
+                                  // enable the save button
+                                  document.getElementById('save-button').disabled = false;
+                                }
+                            }).catch(err => {
+                                console.log(err);
+                                Toastify({
+                                    text: "Failed to save file, if this issue persists please contact support.",
+                                    duration: 5000,
+                                    close: true,
+                                    gravity: "top", // `top` or `bottom`
+                                    position: "right", // `left`, `center` or `right`
+                                    backgroundColor: "#ff0000",
+                                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                                }).showToast();
+                            });
+                          });
+                          document.querySelector('#up').addEventListener('click', async () => {
+                              //- console.log(up)
+                              // fetch and display the files for the new directory
+                              await fetchAndDisplayFiles(directoryName);
+                          });
+                          await fetch(`/api/readfile/#{sentId}?file=${directoryName}/${file.attributes.name}`)
+                            .then(response => response.json())
+                            .then(data => {
+                              console.log(data)
+                              if (data.error) {
+                                alert('Failed to read file, if this issue persists please contact support.');
+                                return;
+                              }
+                              window.editor = monaco.editor.create(document.getElementById('editor'), {
+                                  theme: 'vs-dark',
+                                  value: data.content,
+                                  //- language: 'javascript'
+                              });
+                            })
+                            .catch(error => console.error('Error reading file:', error));
+                        });
+                      }
+                  
+                  }
+
+                  fileList.appendChild(newItem);
+              });
+          } catch (error) {
+              console.error('Error fetching files:', error);
+          } finally {
+              //- loadingIcon.style.display = 'none';
+          }
+      }
+
+      //- // Initial click event listener for the root directory
+      // add a click event listener to the up button
+      document.querySelector('#up').addEventListener('click', async () => {
+          // split the current directory by the slash
+          const split = up.split('/');
+          // remove the last element from the array
+          console.log(split)
+          split.pop();
+          // join the array back together with a slash
+          const newDir = split.join('/');
+          up = newDir;
+          // fetch and display the files for the new directory
+          await fetchAndDisplayFiles(newDir);
+      });
+      document.querySelectorAll('.item').forEach(item => {
+          item.addEventListener('click', async () => {
+              // check if its a directory by checking the icon tag
+              const icon = item.querySelector('i');
+              const isDirectory = icon.classList.contains('fa-folder');
+              if (isDirectory) {
+                const directoryName = item.dataset.id;
+                console.log(directoryName);
+                await fetchAndDisplayFiles(directoryName);
+              } else {
+                // show file content
+                console.log('show file content');
+                if (item.dataset.id.endsWith('.exe') || item.dataset.id.endsWith('.jar') || item.dataset.size > 1000000) {
+                  item.classList.add('disabled');
+                } else {
+                  // change view to editor
+                  const fileManager = document.querySelector('#files');
+                  fileManager.innerHTML = `
+                    <header>
+                        <nav>
+                            <a id="up"><i class="fas fa-arrow-up"></i></a></nav>
+                    </header>
+                    <div class="editor-container">
+                      <h2>Editor</h2>
+                      <div id="editor"></div>
+                      <div class="button-container">
+                        <button class="editor-btn" id="save-button">Save to File</button>
+                      </div>
+                    </div>
+                  `;
+
+                  // Initialize Monaco Editor
+
+                  // Add event listener for the save button
+                  document.querySelector('#up').addEventListener('click', async () => {
+                      await fetchAndDisplayFiles('/');
+                  });
+                  await fetch('/api/readfile/#{sentId}?file=' + item.dataset.id)
+                    .then(response => response.json())
+                    .then(data => {
+                      console.log(data)
+                      if (data.error) {
+                        alert('Failed to read file, if this issue persists please contact support.');
+                        return;
+                      }
+                      window.editor = monaco.editor.create(document.getElementById('editor'), {
+                          theme: 'vs-dark',
+                          value: data.content,
+                          //- language: 'javascript'
+                      });
+                      //- document.getElementById('editor').value = data.content;
+                    })
+                    .catch(error => console.error('Error reading file:', error));
+                  document.getElementById('save-button').addEventListener('click', async function() {
+                    // disable the save button
+                    document.getElementById('save-button').disabled = true;
+                    const text = await window.editor.getValue();
+                    console.log(text)
+                    await fetch('/api/writefile/#{sentId}?file=' + item.dataset.id, {
+                        method: 'POST',
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: await JSON.stringify({
+                            content: text
+                        })
+                    }).then(response => response.json()) // Convert the response to JSON
+                    .then(data => {
+                        if (data.error) {
+                          Toastify({
+                              text: "Failed to save file, if this issue persists please contact support.",
+                              duration: 5000,
+                              close: true,
+                              gravity: "top", // `top` or `bottom`
+                              position: "right", // `left`, `center` or `right`
+                              backgroundColor: "#ff0000",
+                              stopOnFocus: true, // Prevents dismissing of toast on hover
+                          }).showToast();
+                        } else {
+                          Toastify({
+                              text: "File saved successfully.",
+                              duration: 5000,
+                              close: true,
+                              gravity: "top", // `top` or `bottom`
+                              position: "right", // `left`, `center` or `right`
+                              backgroundColor: "#00ff00",
+                              stopOnFocus: true, // Prevents dismissing of toast on hover
+                          }).showToast();
+                          // enable the save button
+                          document.getElementById('save-button').disabled = false;
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        Toastify({
+                            text: "Failed to save file, if this issue persists please contact support.",
+                            duration: 5000,
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "right", // `left`, `center` or `right`
+                            backgroundColor: "#ff0000",
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                        }).showToast();
+                    });
+                  });
+
+                }
+              }
+          });
+      });
+      document.getElementById('delete').addEventListener('click', async () => {
+          const response = await fetch(`/api/delete/#{sentId}`);
+          const data = await response.json();
+          if (data.success == true) {
+            // redirect to /panel
+            window.location.href = '/panel';
+          } else {
+            alert('Failed to delete server, if this issue persists please contact support.');
+          }
+      });
+      //- document.querySelector('.item').addEventListener('click', () => {
+      //-   const directoryName = item.dataset.id;
+      //-   fetchAndDisplayFiles(directoryName);
+      //- });
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.33.0/min/vs/loader.min.js")
