@@ -1,121 +1,68 @@
 const express = require('express');
-const axios = require('axios');
 const Nodeactyl = require('nodeactyl');
-const { pterosocket } = require('pterosocket')
-const node = require('jspteroapi');
 const jwt = require('jsonwebtoken');
-const DiscordUser = require('../database/schemas/DiscordUser');
 const LocalUser = require('../database/schemas/LocalUser');
 const router = express.Router();
 
-const origin = "https://panel.nethernet.org";
+const accountTypeModule = require("../utils/Accounts/accountType") 
 
-const jspteroClient = new node.Client(origin, process.env.api_key); // for Client API
+const origin = "https://panel.nethernet.org";
 const naClient = new Nodeactyl.NodeactylClient(origin, process.env.api_key);
-const naApp = new Nodeactyl.NodeactylApplication(origin, process.env.app_api_key)
-const jspteroApp = new node.Application(origin, process.env.app_api_key);
 
 router.get('/', async (req, res) => {
-    if (req.session.passport) {
-        try {
-            if (req.session.passport.user.type == 'discord') {
-                const discordUser = await DiscordUser.findById(req.session.passport.user.id);
-                if (discordUser) {
-                    // console.log(`Found user: ${discordUser}`);
-                    const userInfo = await axios.get('https://discord.com/api/v10/users/@me', {
-                        headers: {
-                            Authorization: `Bearer ${discordUser.accessToken}`
-                        }
-                    });
-
-                    let avatarLink = `https://cdn.discordapp.com/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
-
-                    res.render('index', { user: userInfo.data, avatar: avatarLink})
-                } else {
-                    res.render('index')
-                }
-            } else if (req.session.passport.user.type == 'local') {
-                const localUser = await LocalUser.findById(req.session.passport.user.id);
-                if (localUser) {
-                    res.render('index', { user: localUser, avatar: '/assets/images/plainavatar.png'})
-                } else {
-                    res.render('index')
-                }
-            }
-        } catch (err) {
-            res.render('index')
-        }
-    } else {
-        res.render('index')
+    // Check if user exists
+    if (!accountTypeModule.hasPassport(req)) {
+        return res.render('index');
     }
+
+    let user = await accountTypeModule.getAccountUser(req) // Get the mongodb user off a persons req object
+
+    // Failsafe in case the previous if doesnt work for some reason
+    if (user == null) {
+        return res.render('index');
+    }
+
+    const {userInfo, avatarLink} = await accountTypeModule.getAccountInfo(req, user)
+
+    res.render('index', { user: userInfo, avatar: avatarLink})
 });
 
 router.get('/panel', async (req, res) => {
-//   console.log(req.session);
-//   console.log(req);
-  if (req.session.passport) {
-    try {
-        if (req.session.passport.user.type == 'discord') {
-            const discordUser = await DiscordUser.findById(req.session.passport.user.id);
-            if (discordUser) {
-                // console.log(`Found user: ${discordUser}`);
-                const userInfo = await axios.get('https://discord.com/api/v10/users/@me', {
-                    headers: {
-                        Authorization: `Bearer ${discordUser.accessToken}`
-                    }
-                });
-                // console.log(userInfo.data);
-                let settingUpServers = [];
-                let servers = discordUser.mcServers[0];
-                // loop through each server inside the dictionary
-                for (const [key, value] of Object.entries(servers)) {
-                    let serverStatus = await naClient.getServerStatus(key).catch(err => {
-                        console.log(err);
-                        settingUpServers.push(key);
-                    });
-                    if (serverStatus == 'starting') {
-                        settingUpServers.push(key);
-                    }
-                }
-                // let userName = userInfo.data.username;
-                let avatarLink = `https://cdn.discordapp.com/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
-
-                res.render('panel', { user: userInfo.data, avatar: avatarLink, settingups: settingUpServers, servers: discordUser.mcServers[0]})
-            } else {
-                res.redirect('/')
-            }
-        } else if (req.session.passport.user.type == 'local') {
-            const localUser = await LocalUser.findById(req.session.passport.user.id);
-            if (localUser) {
-                let servers = localUser.mcServers[0];
-                let settingUpServers = [];
-                for (const [key, value] of Object.entries(servers)) {
-                    let serverStatus = await naClient.getServerStatus(key).catch(err => {
-                        console.log(err);
-                        settingUpServers.push(key);
-                    });
-                    if (serverStatus == 'starting') {
-                        settingUpServers.push(key);
-                    }
-                }
-                res.render('panel', { user: localUser, avatar: '/assets/images/plainavatar.png', settingups: settingUpServers, servers: localUser.mcServers[0]})
-            } else {
-                res.redirect('/')
-            }
-        }
-    } catch (err) {
-        console.log(err);
+    // Check if user exists
+    if (!accountTypeModule.hasPassport(req)) {
+        return res.redirect('/');
     }
-  } else {
-    res.redirect('/')
-  }
+
+    let user = await accountTypeModule.getAccountUser(req) // Get the mongodb user off a persons req object
+
+    // Failsafe in case the previous if doesnt work for some reason
+    if (user == null) {
+        return res.redirect('/');
+    }
+
+    const {userInfo, avatarLink} = await accountTypeModule.getAccountInfo(req, user)
+
+    let settingUpServers = [];
+    let servers = await accountTypeModule.getAccountServers(user)
+
+    for (const [key, value] of Object.entries(servers)) {
+        let serverStatus = await naClient.getServerStatus(key).catch(err => {
+            console.log(err);
+            settingUpServers.push(key);
+        });
+        if (serverStatus == 'starting') {
+            settingUpServers.push(key);
+        }
+    }
+
+    res.render('panel', { user: userInfo, avatar: avatarLink, settingups: settingUpServers, servers: servers})
 })
 
 router.get('/login', async (req,res) => {
-    if (req.session.passport) {
-        res.redirect('/panel')
+    // Check if user exists
+    if (accountTypeModule.hasPassport(req)) {
+        return res.redirect('/panel');
     } else {
-        // console.log(req.query);
         if (req.query.registered) {
             res.render('login', { registered: true })
         } else {
@@ -125,8 +72,8 @@ router.get('/login', async (req,res) => {
 })
 
 router.get('/register', async (req,res) => {
-    if (req.session.passport) {
-        res.redirect('/panel')
+    if (accountTypeModule.hasPassport(req)) {
+        return res.redirect('/panel');
     } else {
         res.render('register')
     }

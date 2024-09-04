@@ -1,7 +1,7 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
 const LocalUser = require('../database/schemas/LocalUser');
-const { hashPassword, comparePassword } = require('../utils/helpers');
+const { comparePassword } = require('../utils/helpers');
 
 passport.use(
     new Strategy({ usernameField: "email" }, async (email, password, done) => {
